@@ -126,7 +126,7 @@ export default function Index() {
           id: item.meta.id,
         },
       }));
-      console.log(allwords); // Log the fetched data to the console
+      console.log(allwords[0].definitions); // Log the fetched data to the console
       setCurrentDef(allwords); // Set the first definition as the current definition
       setWordIndex(0); // Reset the index to 0
     } catch (error) {
