@@ -1,6 +1,7 @@
-import { Text, View, StyleSheet, TouchableOpacity, TextInput, ScrollView } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { Link } from 'expo-router';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useState } from 'react';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { saveFavoriteWord } from '../../db/words';
 
 interface definitionData {
   definition: string;
@@ -101,6 +102,7 @@ export default function Index() {
   const [searchWord, setSearchWord] = useState(''); // State to hold the search word
   const [wordIndex, setWordIndex] = useState(0); // State to hold the index of the current definition
   const [currentDef, setCurrentDef] = useState<wordData[] | null>(null); // State to hold the current definition
+  const [isFavorite, setIsFavorite] = useState(false);
   async function getData() {  // Fetch data from the API 
     const normalizedWord = searchWord.trim().toLowerCase();
     if (!normalizedWord) return;
@@ -129,9 +131,19 @@ export default function Index() {
       console.log(allwords[0].definitions); // Log the fetched data to the console
       setCurrentDef(allwords); // Set the first definition as the current definition
       setWordIndex(0); // Reset the index to 0
+      setIsFavorite(false);
     } catch (error) {
       console.error(error);
     }
+  }
+
+  function handleFavorite() {
+    if (!currentDef || currentDef.length === 0 || isFavorite) return;
+
+    const word = currentDef[0];
+    const wordText = word.meta.id.split(':')[0];
+    saveFavoriteWord(wordText, currentDef);
+    setIsFavorite(true);
   }
 
   
@@ -163,6 +175,14 @@ export default function Index() {
       >
         <Text style={styles.wordtext}>{currentDef?.[wordIndex]?.meta?.id.split(':')[0] || ''}</Text>
         <Text style={styles.wordtype}>{currentDef?.[wordIndex]?.fl || ''}</Text>
+        <TouchableOpacity
+          accessibilityLabel={isFavorite ? 'Word saved to favorites' : 'Save word to favorites'}
+          accessibilityRole="button"
+          onPress={handleFavorite}
+          disabled={!currentDef || isFavorite}
+        >
+          <Ionicons name={isFavorite ? 'star' : 'star-outline'} size={28} color="#ffd33d" />
+        </TouchableOpacity>
         {currentDef?.[wordIndex]?.definitions.map((definition, index) => (
           <View style={{alignItems: 'center'}} key={index}>
             <Text style={styles.wordtext}>
