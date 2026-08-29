@@ -16,7 +16,7 @@ export function saveFavoriteWord(word: string, meanings: unknown) {
 	)
 }
 
-export function getFavoriteWords(): Array<{ id: number; word: string; meanings: unknown }> {
+export function getFavoriteWords(): Array<{ id: number; word: string; meanings: any }> {
 	const result = db.getAllSync(
 		`
 			SELECT id, word, meanings
