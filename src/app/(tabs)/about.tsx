@@ -1,9 +1,12 @@
-import { Text, View, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { useFontSize } from '../_layout';
 
 export default function AboutScreen() {
+  const { fontScale } = useFontSize();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>About screen</Text>
+      <Text style={[styles.text, { fontSize: 18 * fontScale }]}>About screen</Text>
     </View>
   );
 }

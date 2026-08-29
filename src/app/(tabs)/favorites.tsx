@@ -3,6 +3,7 @@ import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { getFavoriteWords, removeFavoriteWord } from '../../db/words';
+import { useFontSize } from '../_layout';
 
 interface WordDefinition {
   definition: string;
@@ -24,6 +25,7 @@ interface FavoriteWord {
 }
 
 export default function FavoritesScreen() {
+  const { fontScale } = useFontSize();
   const [favorites, setFavorites] = useState<FavoriteWord[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [expandedWordId, setExpandedWordId] = useState<number | null>(null);
@@ -83,7 +85,7 @@ export default function FavoritesScreen() {
               size={20}
               style={styles.chevron}
             />
-            <Text style={styles.wordTitle}>{item.word}</Text>
+            <Text style={[styles.wordTitle, { fontSize: 20 * fontScale }]}>{item.word}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => handleRemoveFavorite(item.word)}
@@ -108,7 +110,7 @@ export default function FavoritesScreen() {
                     >
                       <Ionicons name="chevron-back" color={currentMeaningIdx === 0 ? '#ccc' : '#333'} size={20} />
                     </TouchableOpacity>
-                    <Text style={styles.meaningCounter}>
+                    <Text style={[styles.meaningCounter, { fontSize: 12 * fontScale }]}>
                       Meaning {currentMeaningIdx + 1} of {meaningsArray.length}
                     </Text>
                     <TouchableOpacity
@@ -122,16 +124,16 @@ export default function FavoritesScreen() {
                 )}
                 {currentMeaning && (
                   <View style={styles.meaningBlock}>
-                    <Text style={styles.partOfSpeech}>{currentMeaning.fl}</Text>
+                    <Text style={[styles.partOfSpeech, { fontSize: 12 * fontScale }]}>{currentMeaning.fl}</Text>
                     {currentMeaning.definitions && currentMeaning.definitions.length > 0 && (
                       <View style={styles.definitionsContainer}>
                         {currentMeaning.definitions.map((def: WordDefinition, defIndex: number) => (
                           <View key={defIndex} style={styles.definition}>
-                            <Text style={styles.definitionText}>{defIndex + 1}. {def.definition}</Text>
+                            <Text style={[styles.definitionText, { fontSize: 14 * fontScale }]}>{defIndex + 1}. {def.definition}</Text>
                             {def.examples && def.examples.length > 0 && (
                               <View style={styles.examplesContainer}>
                                 {def.examples.map((example: string, exIndex: number) => (
-                                  <Text key={exIndex} style={styles.exampleText}>
+                                  <Text key={exIndex} style={[styles.exampleText, { fontSize: 13 * fontScale }]}>
                                     • {example}
                                   </Text>
                                 ))}
