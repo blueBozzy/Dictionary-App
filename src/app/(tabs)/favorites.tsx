@@ -1,8 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Alert, FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { getFavoriteWords, removeFavoriteWord } from '../../db/words';
+import { Alert, FlatList, Modal, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { getFavoriteWords, removeFavoriteWord, updateFavoriteNote } from '../../db/words';
 import { useFontSize } from '../_layout';
 
 interface WordDefinition {
@@ -22,6 +22,7 @@ interface FavoriteWord {
   id: number;
   word: string;
   meanings: WordData | WordData[];
+  note: string;
 }
 
 export default function FavoritesScreen() {
@@ -30,11 +31,20 @@ export default function FavoritesScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [expandedWordId, setExpandedWordId] = useState<number | null>(null);
   const [meaningIndex, setMeaningIndex] = useState<{ [key: number]: number }>({});
+  const [noteDrafts, setNoteDrafts] = useState<{ [key: number]: string }>({});
+  const [editingNoteWord, setEditingNoteWord] = useState<FavoriteWord | null>(null);
 
   const loadFavorites = useCallback(() => {
     try {
       const words = getFavoriteWords();
       setFavorites(words);
+      setNoteDrafts((currentDrafts) => {
+        const nextDrafts: { [key: number]: string } = {};
+        words.forEach((word) => {
+          nextDrafts[word.id] = currentDrafts[word.id] ?? word.note;
+        });
+        return nextDrafts;
+      });
     } catch (error) {
       console.error('Error loading favorites:', error);
     }
@@ -62,6 +72,17 @@ export default function FavoritesScreen() {
         },
       ]
     );
+  };
+
+  const handleSaveNote = (id: number) => {
+    updateFavoriteNote(id, noteDrafts[id] ?? '');
+    setEditingNoteWord(null);
+    loadFavorites();
+  };
+
+  const openNoteEditor = (word: FavoriteWord) => {
+    setNoteDrafts({ ...noteDrafts, [word.id]: word.note });
+    setEditingNoteWord(word);
   };
 
   const renderWord = ({ item }: { item: FavoriteWord }) => {
@@ -94,6 +115,26 @@ export default function FavoritesScreen() {
             <Ionicons name="heart-dislike" color="#d32f2f" size={24} />
           </TouchableOpacity>
         </View>
+
+        <TouchableOpacity
+          onPress={() => openNoteEditor(item)}
+          style={styles.noteButton}
+          accessibilityLabel={`${item.note ? 'Edit' : 'Add'} note for ${item.word}`}
+        >
+          <Ionicons name={item.note ? 'create-outline' : 'add-circle-outline'} color="#333" size={20} />
+          <Text style={[styles.noteButtonText, { fontSize: 14 * fontScale }]}>
+            {item.note ? 'Edit note' : 'Add note'}
+          </Text>
+        </TouchableOpacity>
+
+        {item.note ? (
+          <View style={styles.noteDisplay}>
+            <Text style={[styles.noteLabel, { fontSize: 11 * fontScale }]}>Your note</Text>
+            <Text style={[styles.notePreview, { fontSize: 13 * fontScale }]} numberOfLines={2}>
+              {item.note}
+            </Text>
+          </View>
+        ) : null}
 
         {isExpanded && (
           <View style={styles.meaningsContainer}>
@@ -171,6 +212,40 @@ export default function FavoritesScreen() {
           extraData={[expandedWordId, meaningIndex]}
         />
       )}
+      <Modal
+        visible={editingNoteWord !== null}
+        animationType="fade"
+        transparent
+        onRequestClose={() => setEditingNoteWord(null)}
+      >
+        <View style={styles.modalBackdrop}>
+          <View style={styles.noteModal}>
+            <Text style={[styles.modalTitle, { fontSize: 20 * fontScale }]}>Note for {editingNoteWord?.word}</Text>
+            <TextInput
+              autoFocus
+              value={editingNoteWord ? noteDrafts[editingNoteWord.id] ?? '' : ''}
+              onChangeText={(note) => {
+                if (editingNoteWord) setNoteDrafts({ ...noteDrafts, [editingNoteWord.id]: note });
+              }}
+              placeholder="Write a note"
+              placeholderTextColor="#999"
+              multiline
+              style={[styles.modalInput, { fontSize: 15 * fontScale }]}
+            />
+            <View style={styles.modalActions}>
+              <TouchableOpacity onPress={() => setEditingNoteWord(null)} style={styles.modalButton}>
+                <Text style={styles.cancelButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => editingNoteWord && handleSaveNote(editingNoteWord.id)}
+                style={[styles.modalButton, styles.saveButton]}
+              >
+                <Text style={styles.saveButtonText}>Save</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -215,6 +290,84 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 12,
+  },
+  noteButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 6,
+    padding: 12,
+    marginBottom: 12,
+  },
+  noteButtonText: {
+    color: '#333',
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  noteDisplay: {
+    backgroundColor: '#fff',
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 6,
+    padding: 10,
+    marginTop: -4,
+    marginBottom: 12,
+  },
+  noteLabel: {
+    color: '#777',
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  notePreview: {
+    color: '#666',
+    fontStyle: 'italic',
+  },
+  modalBackdrop: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    padding: 20,
+  },
+  noteModal: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+  },
+  modalTitle: {
+    color: '#333',
+    fontWeight: '700',
+    marginBottom: 14,
+  },
+  modalInput: {
+    color: '#333',
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderRadius: 6,
+    minHeight: 110,
+    padding: 12,
+    textAlignVertical: 'top',
+  },
+  modalActions: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    marginTop: 16,
+    gap: 10,
+  },
+  modalButton: {
+    borderRadius: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+  },
+  saveButton: {
+    backgroundColor: '#ffd33d',
+  },
+  cancelButtonText: {
+    color: '#666',
+    fontWeight: '600',
+  },
+  saveButtonText: {
+    color: '#333',
+    fontWeight: '700',
   },
   wordTitleContainer: {
     flexDirection: 'row',
