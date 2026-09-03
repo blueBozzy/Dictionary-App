@@ -118,7 +118,7 @@ export default function Index() {
     }
 
     setIsLoading(true);
-    const url = `https://dictionaryapi.com/api/v3/references/sd3/json/${encodeURIComponent(normalizedWord)}?key=d8d29e23-7b63-4d72-abd4-76ce9c2f4ec5`;
+    const url = `https://dictionaryapi.com/api/v3/references/sd3/json/${encodeURIComponent(normalizedWord)}?key=${process.env.EXPO_PUBLIC_MW_API_KEY}`;
     try {
       const response = await fetch(url);
       if (!response.ok) {
