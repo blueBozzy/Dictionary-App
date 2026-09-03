@@ -16,10 +16,10 @@ export function saveFavoriteWord(word: string, meanings: unknown) {
 	)
 }
 
-export function getFavoriteWords(): Array<{ id: number; word: string; meanings: any }> {
+export function getFavoriteWords(): Array<{ id: number; word: string; meanings: any; note: string }> {
 	const result = db.getAllSync(
 		`
-			SELECT id, word, meanings
+			SELECT id, word, meanings, note
 			FROM words
 			WHERE isFavorite = 1
 			ORDER BY searchedAt DESC
@@ -31,8 +31,21 @@ export function getFavoriteWords(): Array<{ id: number; word: string; meanings: 
 			id: row.id,
 			word: row.word,
 			meanings: parsed,
+			note: row.note ?? '',
 		}
 	})
+}
+
+export function updateFavoriteNote(id: number, note: string) {
+	db.runSync(
+		`
+			UPDATE words
+			SET note = ?
+			WHERE id = ?
+		`,
+		note,
+		id
+	)
 }
 
 export function removeFavoriteWord(word: string) {
