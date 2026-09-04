@@ -253,7 +253,7 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#eaf3ff',
   },
   listContent: {
     padding: 16,
@@ -268,22 +268,24 @@ const styles = StyleSheet.create({
   emptyText: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: '#12345b',
     marginTop: 12,
   },
   emptySubtext: {
     fontSize: 14,
-    color: '#666',
+    color: '#52708f',
     marginTop: 6,
     textAlign: 'center',
   },
   wordCard: {
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#ffffff',
     borderRadius: 8,
     padding: 16,
     marginBottom: 12,
     borderLeftWidth: 4,
-    borderLeftColor: '#ffd33d',
+    borderLeftColor: '#ffd447',
+    borderColor: '#d2e2f2',
+    borderWidth: 1,
   },
   wordHeader: {
     flexDirection: 'row',
@@ -294,19 +296,21 @@ const styles = StyleSheet.create({
   noteButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#edf5ff',
+    borderColor: '#b7cee8',
+    borderWidth: 1,
     borderRadius: 6,
     padding: 12,
     marginBottom: 12,
   },
   noteButtonText: {
-    color: '#333',
+    color: '#174b80',
     fontWeight: '600',
     marginLeft: 8,
   },
   noteDisplay: {
-    backgroundColor: '#fff',
-    borderColor: '#ddd',
+    backgroundColor: '#fff9dc',
+    borderColor: '#e5cf6a',
     borderWidth: 1,
     borderRadius: 6,
     padding: 10,
@@ -314,12 +318,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   noteLabel: {
-    color: '#777',
+    color: '#806b18',
     fontWeight: '700',
     marginBottom: 4,
   },
   notePreview: {
-    color: '#666',
+    color: '#5a5f68',
     fontStyle: 'italic',
   },
   modalBackdrop: {
@@ -329,18 +333,20 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   noteModal: {
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffff',
+    borderColor: '#b7cee8',
+    borderWidth: 1,
     borderRadius: 10,
     padding: 20,
   },
   modalTitle: {
-    color: '#333',
+    color: '#12345b',
     fontWeight: '700',
     marginBottom: 14,
   },
   modalInput: {
-    color: '#333',
-    borderColor: '#ddd',
+    color: '#12345b',
+    borderColor: '#b7cee8',
     borderWidth: 1,
     borderRadius: 6,
     minHeight: 110,
@@ -359,14 +365,14 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   saveButton: {
-    backgroundColor: '#ffd33d',
+    backgroundColor: '#ffd447',
   },
   cancelButtonText: {
     color: '#666',
     fontWeight: '600',
   },
   saveButtonText: {
-    color: '#333',
+    color: '#12345b',
     fontWeight: '700',
   },
   wordTitleContainer: {
@@ -380,7 +386,7 @@ const styles = StyleSheet.create({
   wordTitle: {
     fontSize: 20,
     fontWeight: '700',
-    color: '#333',
+    color: '#12345b',
     flex: 1,
   },
   removeButton: {
@@ -393,7 +399,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#edf5ff',
     padding: 12,
     borderRadius: 6,
   },
@@ -405,18 +411,18 @@ const styles = StyleSheet.create({
   },
   meaningCounter: {
     fontSize: 12,
-    color: '#666',
+    color: '#52708f',
     fontWeight: '600',
   },
   meaningBlock: {
-    backgroundColor: '#fff',
+    backgroundColor: '#f7fbff',
     padding: 12,
     borderRadius: 6,
   },
   partOfSpeech: {
     fontSize: 12,
     fontStyle: 'italic',
-    color: '#666',
+    color: '#52708f',
     marginBottom: 8,
   },
   definitionsContainer: {
@@ -427,7 +433,7 @@ const styles = StyleSheet.create({
   },
   definitionText: {
     fontSize: 14,
-    color: '#333',
+    color: '#12345b',
     lineHeight: 20,
   },
   examplesContainer: {
@@ -437,7 +443,7 @@ const styles = StyleSheet.create({
   },
   exampleText: {
     fontSize: 13,
-    color: '#666',
+    color: '#52708f',
     fontStyle: 'italic',
     lineHeight: 18,
   },

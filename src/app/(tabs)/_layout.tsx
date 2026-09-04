@@ -30,15 +30,21 @@ function FontSizeSelector() {
 export default function TabLayout() {
     return (
         <Tabs screenOptions={{
-            tabBarActiveTintColor: '#ffd33d',
+            tabBarActiveTintColor: '#ffd447',
+            tabBarInactiveTintColor: '#9fb4d1',
             headerStyle: {
-                backgroundColor: '#909396',
+                backgroundColor: '#12345b',
+            },
+            headerTitleStyle: {
+                fontSize: 18,
             },
             headerShadowVisible: false,
             headerTintColor: '#fff',
             headerRight: () => <FontSizeSelector />,
             tabBarStyle: {
-                backgroundColor: '#b2b6bb',
+                backgroundColor: '#12345b',
+                borderTopColor: '#244b78',
+                height: 68,
             },
         }}>
             <Tabs.Screen
@@ -76,18 +82,18 @@ const styles = StyleSheet.create({
     fontSelector: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 6,
-        paddingRight: 12,
+        gap: 4,
+        paddingRight: 8,
     },
     fontOption: {
-        minWidth: 34,
-        paddingHorizontal: 8,
-        paddingVertical: 6,
-        borderRadius: 8,
-        backgroundColor: 'rgba(255,255,255,0.2)',
+        minWidth: 30,
+        paddingHorizontal: 6,
+        paddingVertical: 4,
+        borderRadius: 6,
+        backgroundColor: '#244b78',
     },
     fontOptionActive: {
-        backgroundColor: '#ffd33d',
+        backgroundColor: '#ffd447',
     },
     fontOptionText: {
         color: '#fff',
@@ -95,6 +101,6 @@ const styles = StyleSheet.create({
         fontWeight: '700',
     },
     fontOptionTextActive: {
-        color: '#1f2937',
+        color: '#12345b',
     },
 });

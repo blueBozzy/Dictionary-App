@@ -173,7 +173,12 @@ export default function Index() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.container2}>
+      <ScrollView
+        style={styles.screenScroll}
+        contentContainerStyle={[styles.screenContent, fontScale >= 1.4 && styles.largeFontContainer]}
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.container2}>
         <TextInput
           style={[styles.inputField, { fontSize: 22 * fontScale }]}
           placeholder="Enter a word"
@@ -186,13 +191,15 @@ export default function Index() {
         <TouchableOpacity style={styles.searchButton} onPress={getData} disabled={isLoading}>
           <Text style={[styles.searchButtonText, { fontSize: 18 * fontScale }]}>{isLoading ? 'Loading...' : 'Submit'}</Text>
         </TouchableOpacity>
-      </View>
+        </View>
 
-      {shouldShowDefinitionCard && (
-        <View style={styles.cardAndArrows}>
+        {shouldShowDefinitionCard && (
+          <View style={styles.cardAndArrows}>
           <ScrollView
             style={styles.container3}
             contentContainerStyle={styles.container3Content}
+            nestedScrollEnabled
+            showsVerticalScrollIndicator
           >
             <Text style={[styles.wordtext, { fontSize: 22 * fontScale }]}>{currentDef?.[wordIndex]?.meta?.id.split(':')[0] || ''}</Text>
             <Text style={[styles.wordtype, { fontSize: 16 * fontScale }]}>{currentDef?.[wordIndex]?.fl || ''}</Text>
@@ -229,8 +236,9 @@ export default function Index() {
               <Text style={styles.button2}>›</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      )}
+          </View>
+        )}
+      </ScrollView>
     </View>
   );
 }
@@ -238,14 +246,25 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#eaf3ff',
+  },
+  screenScroll: {
+    flex: 1,
+    width: '100%',
+  },
+  screenContent: {
+    flexGrow: 1,
     flexDirection: 'column',
-    backgroundColor: '#25292e',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 24,
   },
+  largeFontContainer: {
+    justifyContent: 'flex-start',
+    paddingTop: 44,
+  },
   text: {
-    color: '#fff',
+    color: '#12345b',
   },
   button: {
     fontSize: 20,
@@ -256,12 +275,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
     fontSize: 42,
-    color: '#fff',
+    color: '#174b80',
     lineHeight: 42,
   },
   container2: {
     width: '100%',
-    backgroundColor: '#25292e',
+    backgroundColor: '#eaf3ff',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
@@ -271,7 +290,9 @@ const styles = StyleSheet.create({
     maxWidth: 520,
     minHeight: 58,
     backgroundColor: '#ffffff',
-    color: '#111827',
+    color: '#12345b',
+    borderColor: '#b7cee8',
+    borderWidth: 1,
     borderRadius: 14,
     paddingHorizontal: 18,
     paddingVertical: 14,
@@ -281,16 +302,16 @@ const styles = StyleSheet.create({
   searchButton: {
     paddingHorizontal: 22,
     paddingVertical: 12,
-    backgroundColor: '#4563d1',
+    backgroundColor: '#ffd447',
     borderRadius: 10,
   },
   searchButtonText: {
-    color: '#ffffff',
+    color: '#12345b',
     fontSize: 18,
     fontWeight: '600',
   },
   loadingText: {
-    color: '#ffffff',
+    color: '#174b80',
     fontSize: 16,
     marginTop: 8,
   },
@@ -303,7 +324,9 @@ const styles = StyleSheet.create({
     width: '100%',
     minHeight: 420,
     maxHeight: 520,
-    backgroundColor: '#8e9aa8',
+    backgroundColor: '#ffffff',
+    borderColor: '#b7cee8',
+    borderWidth: 1,
     borderRadius: 14,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -318,6 +341,7 @@ const styles = StyleSheet.create({
     paddingVertical: 28,
   },
   wordtext: {
+    color: '#12345b',
     fontWeight: 'bold',
     fontFamily: 'serif',
     marginLeft: 32,
@@ -330,13 +354,13 @@ const styles = StyleSheet.create({
     marginRight: 32,
     fontSize: 18,
     fontStyle: 'italic',
-    color: '#464242',
+    color: '#52708f',
     textAlign: 'center',
   },
   wordtype: {
     fontStyle: 'italic',
     fontSize: 16,
-    color: '#464242',
+    color: '#52708f',
     marginBottom: 8,
   },
   arrowRow: {
@@ -348,7 +372,7 @@ const styles = StyleSheet.create({
   },
   counter: {
     fontSize: 20,
-    color: '#ffffff',
+    color: '#174b80',
     marginHorizontal: 12,
     marginTop: 4,
   },
